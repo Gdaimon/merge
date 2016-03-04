@@ -1,15 +1,16 @@
-var m = [];
-m = llenarArreglo(m);
-console.log(m);
-m = dividir(m);
-console.log(dividir(m));
+var p = [];
+p = llenarArreglo();
+console.log(p);
+p = dividir(p);
+console.log(p);
 
 
-function llenarArreglo(m) {
-    for (var i = 0; i < 64; ++i) {
-        m.push(Math.round(Math.random() * 100));
+function llenarArreglo() {
+    var temp = [];
+    for (var i = 0; i < 9; ++i) {
+        temp.push(Math.round(Math.random() * 100));
     }
-    return m;
+    return temp;
 }
 
 function dividir(arr) {
@@ -20,28 +21,75 @@ function dividir(arr) {
 
     var mid = Math.floor(arr.length / 3);
 
-    var uno = arr.slice(0, mid+1);
-//var uno = dividir(arr.slice(0, mid));
-    console.log(arr.length);
-    console.log('uno: '+ uno.length);
-    console.log((mid*2)+1);
-    var dos = arr.slice(mid+1, (mid*2)+1);
-    //var dos = dividir(arr.slice(mid, mid*2));
-    console.log('dos: '+ dos.length);
-    var tres = arr.slice((mid*2)+1, (mid*3)+2);
-    //var tres = dividir(arr.slice(mid*2, (mid*3)-1));
-    console.log('tres: '+ tres.length);
+    var uno = dividir(arr.slice(0, mid));
+    var dos = dividir(arr.slice(mid, mid * 2));
+    var tres = dividir(arr.slice(mid * 2));
 
-    console.log('suma: '+ uno+dos+tres);
     return merge(uno, dos, tres);
 }
 
+/*
 function merge(a, b, c) {
     var result = [];
+    while (a.length > 0 && b.length > 0 && c.length > 0) {
+        if (a[0] < b[0]) {
+            if (a[0] < c[0]) {
+                result.push(a.shift());
+                result.push(c.shift());
+                result.push(b.shift());
+            } else {
+                result.push(c.shift());
+                result.push(a.shift());
+                result.push(b.shift());
+            }
+        } else {
+            if (b[0] < c[0]) {
+                result.push(b.shift());
+                if (c[0] < a[0]) {
+                    result.push(c.shift());
+                    result.push(a.shift());
+                } else {
+                    result.push(a.shift());
+                    result.push(c.shift());
+                }
 
-    while (a.length > 0 && b.length > 0 && c.length ) {
-        result.push(a[0] < b[0] ? a.shift() : b.shift());
+            } else {
+                result.push(c.shift());
+                if (b[0] < a[0]) {
+                    result.push(b.shift());
+                    result.push(a.shift());
+                } else {
+                    result.push(a.shift());
+                    result.push(b.shift());
+                }
+            }
+        }
+    }
+    return result;
+}*/
+
+function merge(a, b, c) {
+    var result = [];
+    var temp = [];
+
+    while (a.length > 0 && b.length > 0) {
+        temp.push(a[0] < b[0] ? a.shift() : b.shift());
     }
 
-    return result.concat(a.length ? a : b);
+    if (a.length) {
+        temp = temp.concat(a);
+    } else {
+        temp = temp.concat(b);
+    }
+
+    while (temp.length > 0 && c.length > 0) {
+        result.push(temp[0] < c[0] ? temp.shift() : c.shift());
+    }
+
+    if (temp.length) {
+        result = result.concat(temp);
+    } else {
+        result = result.concat(c);
+    }
+    return result;
 }
